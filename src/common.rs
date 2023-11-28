@@ -3,7 +3,7 @@ use crate::{
     ip2location::{db::LocationDB, record::LocationRecord},
     ip2proxy::{db::ProxyDB, record::ProxyRecord},
 };
-use memmap::Mmap;
+use memmap2::Mmap;
 use std::{
     borrow::Cow,
     net::{IpAddr, Ipv6Addr},
@@ -24,7 +24,7 @@ pub enum DB {
 
 #[derive(Debug)]
 pub enum Record<'a> {
-    LocationDb(LocationRecord<'a>),
+    LocationDb(Box<LocationRecord<'a>>),
     ProxyDb(ProxyRecord<'a>),
 }
 
@@ -153,7 +153,7 @@ impl DB {
         //! assert_eq!(geo_info.country.unwrap().short_name, "FR")
         //!```
         match self {
-            Self::LocationDb(db) => Ok(Record::LocationDb(db.ip_lookup(ip)?)),
+            Self::LocationDb(db) => Ok(Record::LocationDb(Box::from(db.ip_lookup(ip)?))),
             Self::ProxyDb(db) => Ok(Record::ProxyDb(db.ip_lookup(ip)?)),
         }
     }

@@ -6,13 +6,13 @@ use crate::{
         record::{self, LocationRecord},
     },
 };
-use memmap::Mmap;
 use std::{
     fs::File,
     net::{IpAddr, Ipv6Addr},
     path::Path,
     result::Result,
 };
+use memmap2::Mmap;
 
 #[derive(Debug)]
 pub struct LocationDB {
